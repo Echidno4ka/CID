@@ -74,11 +74,25 @@
       position:relative; height:100vh; min-height:560px;
       overflow:hidden; display:flex; align-items:center; justify-content:center;
     }
+    /* ══ ФОНОВОЕ ИЗОБРАЖЕНИЕ ══
+       Чтобы добавить своё фото:
+       замени  background-image: url('')
+       на      background-image: url('ИМЯ_ФАЙЛА.jpg')
+       Файл положи рядом с index.html
+    ══════════════════════════ */
+    .hero-bg-img {
+      position: absolute; inset: -20%; z-index: 1;
+      background-image: url('');        /* ← ВСТАВЬ ПУТЬ К ФОТО СЮДА */
+      background-size: cover;
+      background-position: center 30%;
+      will-change: transform;
+    }
+    /* Затемняющий градиент поверх фото */
     .hero-sky {
-      position:absolute; inset:0; z-index:1;
+      position:absolute; inset:0; z-index:2;
       background:
-        radial-gradient(ellipse 90% 70% at 50% -10%, #0b1c32 0%, #060f1e 45%, #030810 100%),
-        linear-gradient(180deg,#030810 0%,#070f1c 40%,#0a1628 55%,#040c18 80%,#020407 100%);
+        radial-gradient(ellipse 90% 70% at 50% -10%,  rgba(11,28,50,0.82) 0%, rgba(6,15,30,0.75) 45%, rgba(3,8,16,0.88) 100%),
+        linear-gradient(180deg, rgba(3,8,16,0.75) 0%, rgba(7,15,28,0.6) 40%, rgba(10,22,40,0.55) 55%, rgba(4,12,24,0.72) 80%, rgba(2,4,7,0.95) 100%);
     }
     .hero-rays {
       position:absolute; top:-10%; left:50%; transform:translateX(-50%);
@@ -432,6 +446,9 @@
 
 <!-- ══════ HERO ══════ -->
 <header class="hero">
+  <!-- Фоновое фото (поставь url в CSS .hero-bg-img или прямо сюда через style) -->
+  <div class="hero-bg-img" id="hbgimg"></div>
+  <!-- Градиент-затемнение поверх фото -->
   <div class="hero-sky" id="hbg"></div>
   <div class="hero-rays" id="hrays"></div>
   <div class="hero-pillar"></div>
@@ -1335,7 +1352,8 @@ function toggle(hd){
 }
 
 /* ════ ПАРАЛЛАКС ════ */
-const hbg=document.getElementById('hbg'),
+const hbgimg=document.getElementById('hbgimg'),
+      hbg=document.getElementById('hbg'),
       hrays=document.getElementById('hrays'),
       hscene=document.getElementById('hscene'),
       hfog=document.getElementById('hfog'),
@@ -1344,8 +1362,10 @@ const hbg=document.getElementById('hbg'),
 
 function onScroll(){
   const sy=window.scrollY;
-  if(hbg)    hbg.style.transform    =`translate3d(0,${sy*.22}px,0)`;
-  if(hrays)  hrays.style.transform  =`translate3d(-50%,${sy*.12}px,0)`;
+  // фото двигается медленнее всего — самый глубокий слой
+  if(hbgimg) hbgimg.style.transform  =`translate3d(0,${sy*.12}px,0)`;
+  if(hbg)    hbg.style.transform     =`translate3d(0,${sy*.22}px,0)`;
+  if(hrays)  hrays.style.transform   =`translate3d(-50%,${sy*.12}px,0)`;
   if(hscene) hscene.style.transform =`translate3d(0,${sy*.18}px,0)`;
   if(hfog)   hfog.style.transform   =`translate3d(0,${sy*.08}px,0)`;
   if(hcnt){  hcnt.style.transform   =`translate3d(0,${sy*.32}px,0)`;
